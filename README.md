@@ -1,5 +1,7 @@
 # Morfiade MCP
 
+<!-- mcp-name: io.github.morfiade-app/morfiade-mcp -->
+
 **MCP server for local Google Chrome profiles on Windows.** 18 tools that let an
 AI agent list, create, launch and organise real Chrome profiles on your own
 machine — each with its own cookies, sessions and proxy.
@@ -88,8 +90,26 @@ README — check your client's own docs.
 
 If you would rather not hardcode the path,
 [`morfiade_mcp.py`](morfiade_mcp.py) finds the executable (via `MORFIADE_EXE`,
-`PATH`, or the usual install directories), forwards stdio and returns its exit
-code. Requires Python 3.7+ and nothing else:
+the installer's registry key, the usual install directories, or `PATH`),
+forwards stdio and returns its exit code. Requires Python 3.7+ and nothing else.
+
+```
+pip install morfiade-mcp
+```
+
+```json
+{
+  "mcpServers": {
+    "morfiade": {
+      "command": "morfiade-mcp"
+    }
+  }
+}
+```
+
+If your client needs an absolute path, point it at the `morfiade-mcp.exe`
+that pip put in your Python `Scripts` directory — or skip the package and run
+the single file directly:
 
 ```json
 {
@@ -101,6 +121,9 @@ code. Requires Python 3.7+ and nothing else:
   }
 }
 ```
+
+The package contains only that launcher. The server, and everything it talks
+to, is the desktop app.
 
 ---
 

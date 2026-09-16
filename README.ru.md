@@ -86,8 +86,26 @@ claude mcp add morfiade -- "C:\Program Files\Morfiade\Morfiade.exe" --mcp
 ### Необязательная запускалка
 
 Если не хочется вписывать путь руками, [`morfiade_mcp.py`](morfiade_mcp.py) сам
-найдёт программу (по `MORFIADE_EXE`, в `PATH` или в обычных папках установки),
-прокинет ввод-вывод и вернёт её код выхода. Нужен Python 3.7+ и больше ничего:
+найдёт программу (по `MORFIADE_EXE`, по записи установщика в реестре, в обычных
+папках установки или в `PATH`), прокинет ввод-вывод и вернёт её код выхода.
+Нужен Python 3.7+ и больше ничего.
+
+```
+pip install morfiade-mcp
+```
+
+```json
+{
+  "mcpServers": {
+    "morfiade": {
+      "command": "morfiade-mcp"
+    }
+  }
+}
+```
+
+Если клиенту нужен полный путь — укажите `morfiade-mcp.exe` из папки `Scripts`
+вашего Python. Или обойдитесь без пакета и запускайте один файл:
 
 ```json
 {
@@ -99,6 +117,9 @@ claude mcp add morfiade -- "C:\Program Files\Morfiade\Morfiade.exe" --mcp
   }
 }
 ```
+
+В пакете лежит только эта запускалка. Сам сервер и всё, с чем он говорит, — в
+программе.
 
 ---
 

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.morfiade-app/morfiade-mcp",
+  "title": "Morfiade",
+  "description": "Manage local Chrome profiles on Windows: own cookies, sessions and proxy per profile.",
+  "version": "0.1.0",
+  "websiteUrl": "https://morfiade.com/en/",
+  "repository": {
+    "url": "https://github.com/morfiade-app/morfiade-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "morfiade-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
