@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "morfiade": {
+      "command": "C:\\Program Files\\Morfiade\\Morfiade.exe",
+      "args": ["--mcp"]
+    }
+  }
+}

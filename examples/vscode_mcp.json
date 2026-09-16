@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "morfiade": {
+      "type": "stdio",
+      "command": "C:\\Program Files\\Morfiade\\Morfiade.exe",
+      "args": ["--mcp"]
+    }
+  }
+}

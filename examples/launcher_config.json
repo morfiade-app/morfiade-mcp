@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "morfiade": {
+      "command": "python",
+      "args": ["C:\\path\\to\\morfiade-mcp\\morfiade_mcp.py"]
+    }
+  }
+}
