@@ -107,20 +107,10 @@ pip install morfiade-mcp
 }
 ```
 
-If your client needs an absolute path, point it at the `morfiade-mcp.exe`
-that pip put in your Python `Scripts` directory — or skip the package and run
-the single file directly:
-
-```json
-{
-  "mcpServers": {
-    "morfiade": {
-      "command": "python",
-      "args": ["C:\\path\\to\\morfiade_mcp.py"]
-    }
-  }
-}
-```
+If your client needs an absolute path, point it at the `morfiade-mcp.exe` that
+pip put in your Python `Scripts` directory. Without the package, the single file
+works on its own too — `"command": "python"` with `morfiade_mcp.py` as the only
+argument.
 
 The package contains only that launcher. The server, and everything it talks
 to, is the desktop app.
