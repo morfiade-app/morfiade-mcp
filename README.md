@@ -121,26 +121,24 @@ to, is the desktop app.
 
 Full parameters and return shapes: [`docs/TOOLS.md`](docs/TOOLS.md).
 
-| Tool | What it does |
-|---|---|
-| `status` | version, how many profiles exist, how many the agent may use, how many are running |
-| `list_profiles` | the permitted profiles: name, running or not, proxy, note |
-| `create_profile` | create a profile — optionally with proxy, note and category; permitted for the agent immediately |
-| `start_profile` | launch a profile, optionally straight onto a URL |
-| `stop_profile` | close the profile window |
-| `set_proxy` | assign a proxy (`type://user:pass@host:port` or `host:port`; empty string clears it) |
-| `check_proxy` | check one profile's proxy: alive, and where it exits |
-| `check_proxies` | the same across several profiles, or all of them |
-| `profile_tags` | read the tags, or replace them wholesale |
-| `profile_note` | read or write the note and its short title |
-| `sync_windows` | which open windows are ready for distribution and what is already pinned to each |
-| `sync_sets` | value sets: list them (name, lines, how many still free) or create one |
-| `sync_spread` | pin one line of a set per window and report who got what — inserts nothing |
-| `sync_insert` | insert each window's own value where the cursor sits in the leading window |
-| `list_scripts` | scripts in the manager's folder: name and interpreter, never the contents |
-| `trash_profile` | move a profile **to the trash** — nothing is erased |
-| `list_trash` | what is in the trash: name, when, how much space |
-| `restore_profile` | restore from the trash; a taken name comes back as `name (2)` |
+- **`status`** — version, how many profiles exist, how many the agent may use, how many are running
+- **`list_profiles`** — the permitted profiles: name, running or not, proxy, note
+- **`create_profile`** — create a profile — optionally with proxy, note and category; permitted for the agent immediately
+- **`start_profile`** — launch a profile, optionally straight onto a URL
+- **`stop_profile`** — close the profile window
+- **`set_proxy`** — assign a proxy (`type://user:pass@host:port` or `host:port`; empty string clears it)
+- **`check_proxy`** — check one profile's proxy: alive, and where it exits
+- **`check_proxies`** — the same across several profiles, or all of them
+- **`profile_tags`** — read the tags, or replace them wholesale
+- **`profile_note`** — read or write the note and its short title
+- **`sync_windows`** — which open windows are ready for distribution and what is already pinned to each
+- **`sync_sets`** — value sets: list them (name, lines, how many still free) or create one
+- **`sync_spread`** — pin one line of a set per window and report who got what — inserts nothing
+- **`sync_insert`** — insert each window's own value where the cursor sits in the leading window
+- **`list_scripts`** — scripts in the manager's folder: name and interpreter, never the contents
+- **`trash_profile`** — move a profile **to the trash** — nothing is erased
+- **`list_trash`** — what is in the trash: name, when, how much space
+- **`restore_profile`** — restore from the trash; a taken name comes back as `name (2)`
 
 Two more appear only behind explicit flags — see
 [Dangerous flags](#dangerous-flags-off-by-default).
