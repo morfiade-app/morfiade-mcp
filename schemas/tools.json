@@ -1,0 +1,318 @@
+[
+  {
+    "description": "List of browser profiles available for management. Shows only those with access allowed by the owner (\"API\" column). For each — name, whether running, proxy, and note.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "list_profiles"
+  },
+  {
+    "description": "Manager status: version, total profile count, profiles available to agent, and profiles currently running.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "status"
+  },
+  {
+    "description": "Start browser profile. Can open a URL immediately. If profile is already running, the URL will open in its window.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "description": "Profile name from list_profiles",
+          "type": "string"
+        },
+        "url": {
+          "description": "Optional URL to open",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "start_profile"
+  },
+  {
+    "description": "Close profile window.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "stop_profile"
+  },
+  {
+    "description": "Assign proxy to profile. Format \"type://login:password@host:port\" or \"host:port\". Empty string removes proxy.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string"
+        },
+        "proxy": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "http",
+            "socks4",
+            "socks5"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile",
+        "proxy"
+      ],
+      "type": "object"
+    },
+    "name": "set_proxy"
+  },
+  {
+    "description": "Check profile proxy: whether alive and exit location.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "check_proxy"
+  },
+  {
+    "description": "Create new browser profile. Immediately allowed for agent. Proxy, note, and category can be set.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "name": {
+          "description": "New profile name",
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "proxy": {
+          "type": "string"
+        },
+        "proxy_type": {
+          "enum": [
+            "http",
+            "socks4",
+            "socks5"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "name": "create_profile"
+  },
+  {
+    "description": "Profile tags: without \"tags\" shows current ones, with \"tags\" replaces them entirely.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "profile_tags"
+  },
+  {
+    "description": "Profile note: without fields shows current one, with fields saves it. \"title\" is a short title visible in the table.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "note": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "profile_note"
+  },
+  {
+    "description": "Check proxies for multiple profiles at once. Without a list, checks all available.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "name": "check_proxies"
+  },
+  {
+    "description": "Which open windows are ready for value distribution and what is already assigned to each. Windows without antidetect are shown with a reason.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "sync_windows"
+  },
+  {
+    "description": "Value sets for distribution across windows. Without fields — shows sets (name, line count, how many free). With \"name\" and \"lines\" — creates a new set.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "lines": {
+          "description": "Values line by line, one per window",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "name": "sync_sets"
+  },
+  {
+    "description": "Assign one line from the set to each open window. Inserts nothing — only decides what goes where and returns it. Repeated call does not reassign already assigned values.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profiles": {
+          "description": "Whom to distribute to; defaults to all ready",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "set": {
+          "description": "Set name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "set"
+      ],
+      "type": "object"
+    },
+    "name": "sync_spread"
+  },
+  {
+    "description": "Insert into each window ITS value from the set into the field where the cursor is placed in the lead window. Before calling, a human must focus the desired field.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "leader": {
+          "description": "Lead window; defaults to the first ready",
+          "type": "string"
+        },
+        "set": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "set"
+      ],
+      "type": "object"
+    },
+    "name": "sync_insert"
+  },
+  {
+    "description": "Scripts from manager folder: name, runner, and whether runner is available. File contents are not shown.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "list_scripts"
+  },
+  {
+    "description": "Move profile TO TRASH. Data is not deleted: profile is kept intact with cookies and sessions, and can be restored with restore_profile. Running profile is closed first.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "trash_profile"
+  },
+  {
+    "description": "What is in trash: name, when deleted, size.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "list_trash"
+  },
+  {
+    "description": "Restore profile from trash. If previous name is taken, profile will be restored alongside as \"name (2)\" — nothing gets overwritten.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "restore_profile"
+  }
+]

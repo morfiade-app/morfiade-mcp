@@ -1,7 +1,12 @@
 # Tool reference
 
-Verified against Morfiade 3.36. The server advertises protocol `2025-11-25`,
+Verified against Morfiade 3.37. The server advertises protocol `2025-11-25`,
 server name `morfiade`, and one capability: `tools` (`listChanged: false`).
+
+This page is for people. The machine-readable schemas — exactly what the server
+answers to `tools/list` — are in [`../schemas/`](../schemas/), dumped from the
+released build rather than written by hand. `schemas/check_schemas.py` fails if
+this page and those files ever stop agreeing on tool names or parameters.
 
 Every tool returns a JSON object as a single text content block. Failures come
 back as `{"ok": false, "error": "..."}` with `isError` set, never as a silent

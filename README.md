@@ -48,7 +48,7 @@ Example prompts that work out of the box:
 ## Requirements
 
 - Windows 10 or 11
-- [Morfiade](https://morfiade.com/en/) 3.36 or newer, **running**
+- [Morfiade](https://morfiade.com/en/) 3.37 or newer, **running**
 - **Local API enabled** in its settings — the server refuses to start without it
   instead of failing silently
 - The **"API" checkbox ticked** on the profiles the agent may touch; it is off by
@@ -120,6 +120,7 @@ to, is the desktop app.
 ## Tools
 
 Full parameters and return shapes: [`docs/TOOLS.md`](docs/TOOLS.md).
+Machine-readable schemas, exactly as the server answers `tools/list`: [`schemas/`](schemas/).
 
 - **`status`** — version, how many profiles exist, how many the agent may use, how many are running
 - **`list_profiles`** — the permitted profiles: name, running or not, proxy, note
