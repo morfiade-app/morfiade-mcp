@@ -1,6 +1,10 @@
 [
   {
-    "description": "List of browser profiles available for management. Shows only those with access allowed by the owner (\"API\" column). For each — name, whether running, proxy, and note.",
+    "annotations": {
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "List the browser profiles the owner has allowed for the agent (the \"API\" column in Morfiade); other profiles are invisible here. For each: name, whether it is running, proxy (password hidden), proxy type, category, antidetect on/off, note and launch count. Read-only. Call it first: every other tool takes a profile name exactly as listed here.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {},
@@ -9,7 +13,11 @@
     "name": "list_profiles"
   },
   {
-    "description": "Manager status: version, total profile count, profiles available to agent, and profiles currently running.",
+    "annotations": {
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Morfiade version, how many profiles exist, how many the agent may use and how many are running right now. Read-only and instant; use it to check the manager is reachable before anything else.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {},
@@ -18,16 +26,22 @@
     "name": "status"
   },
   {
-    "description": "Start browser profile. Can open a URL immediately. If profile is already running, the URL will open in its window.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false
+    },
+    "description": "Launch a profile: opens its real Chrome window with its own cookies, sessions and proxy. If the profile is already running, only opens the URL in a new tab of that window. Can take up to a minute and needs a valid Morfiade licence. The agent cannot drive the page afterwards through these tools; that needs browser_command, which the owner enables separately.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
-          "description": "Profile name from list_profiles",
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         },
         "url": {
-          "description": "Optional URL to open",
+          "description": "Address to open, with scheme (https://...); optional",
           "type": "string"
         }
       },
@@ -39,11 +53,18 @@
     "name": "start_profile"
   },
   {
-    "description": "Close profile window.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Close a running profile's Chrome window. Nothing is deleted: cookies, sessions and history stay in the profile, and the next start_profile picks them up. Text typed into pages but not submitted is lost. Calling it on a stopped profile is harmless and reports already_stopped.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         }
       },
@@ -55,17 +76,26 @@
     "name": "stop_profile"
   },
   {
-    "description": "Assign proxy to profile. Format \"type://login:password@host:port\" or \"host:port\". Empty string removes proxy.",
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Save a proxy in a profile's settings, replacing the current one; an empty string removes it. Takes effect on the next launch: a running profile keeps its old proxy until stop_profile and start_profile. Run check_proxy afterwards to see whether it works.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         },
         "proxy": {
+          "description": "Proxy as host:port, host:port:login:password, or scheme://login:password@host:port where scheme is http, socks4 or socks5; empty string removes the proxy",
           "type": "string"
         },
         "type": {
+          "description": "Proxy protocol; defaults to http. Ignored when the proxy string already starts with a scheme",
           "enum": [
             "http",
             "socks4",
@@ -83,11 +113,16 @@
     "name": "set_proxy"
   },
   {
-    "description": "Check profile proxy: whether alive and exit location.",
+    "annotations": {
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Test one profile's proxy by making a request through it: whether it answers, the exit IP and country, and latency. Changes nothing; takes up to about ten seconds. For several profiles use check_proxies instead.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         }
       },
@@ -99,24 +134,34 @@
     "name": "check_proxy"
   },
   {
-    "description": "Create new browser profile. Immediately allowed for agent. Proxy, note, and category can be set.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Create a new, empty Chrome profile on disk and allow it for the agent. It is not launched: call start_profile for that. Fails if the name is already taken; use list_profiles to see existing names. Proxy, note and category can be set at once or later with set_proxy and profile_note.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "category": {
+          "description": "Category to file the profile under; created if missing; optional",
           "type": "string"
         },
         "name": {
-          "description": "New profile name",
+          "description": "Name for the new profile; must not match an existing one",
           "type": "string"
         },
         "note": {
+          "description": "Free-text note shown in the profile table; optional",
           "type": "string"
         },
         "proxy": {
+          "description": "Proxy as host:port, host:port:login:password, or scheme://login:password@host:port where scheme is http, socks4 or socks5; optional",
           "type": "string"
         },
         "proxy_type": {
+          "description": "Proxy protocol; defaults to http. Ignored when the proxy string already starts with a scheme",
           "enum": [
             "http",
             "socks4",
@@ -133,14 +178,22 @@
     "name": "create_profile"
   },
   {
-    "description": "Profile tags: without \"tags\" shows current ones, with \"tags\" replaces them entirely.",
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Read a profile's tags, or replace them all. Without tags it only reads. With tags the list you pass becomes the whole set: tags you leave out are removed, and an empty list clears them. To add one tag, read first and pass the old list plus the new tag.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         },
         "tags": {
+          "description": "New full list of tags, replacing the old one; omit to only read; an empty list clears all tags",
           "items": {
             "type": "string"
           },
@@ -155,17 +208,26 @@
     "name": "profile_tags"
   },
   {
-    "description": "Profile note: without fields shows current one, with fields saves it. \"title\" is a short title visible in the table.",
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Read or write a profile's note. Without title and note it only reads. title is the short line shown in the profile table, note the full text; a field you pass overwrites the old value, a field you omit stays as it was.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "note": {
+          "description": "Full note text; omit to keep",
           "type": "string"
         },
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         },
         "title": {
+          "description": "Short title shown in the profile table; omit to keep",
           "type": "string"
         }
       },
@@ -177,11 +239,16 @@
     "name": "profile_note"
   },
   {
-    "description": "Check proxies for multiple profiles at once. Without a list, checks all available.",
+    "annotations": {
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Test the proxies of several profiles, or of every profile available to the agent when no list is given. Checks run one after another, up to about ten seconds each, so a long list takes minutes. Changes nothing. Profiles without a proxy are reported as such.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profiles": {
+          "description": "Profile names to check; omit to check every profile available to the agent",
           "items": {
             "type": "string"
           },
@@ -193,7 +260,11 @@
     "name": "check_proxies"
   },
   {
-    "description": "Which open windows are ready for value distribution and what is already assigned to each. Windows without antidetect are shown with a reason.",
+    "annotations": {
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Which open profile windows can take part in distributing values, and which value each already holds. Windows that cannot (for example, antidetect off) are listed with the reason. Read-only; call it before sync_spread and sync_insert.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {},
@@ -202,18 +273,25 @@
     "name": "sync_windows"
   },
   {
-    "description": "Value sets for distribution across windows. Without fields — shows sets (name, line count, how many free). With \"name\" and \"lines\" — creates a new set.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Value sets for distributing across windows: lists of emails, logins or any line-based data, one line per window. Without arguments lists the sets with their line count and how many lines are still free; the values themselves are never shown. With name and lines creates a new set.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "lines": {
-          "description": "Values line by line, one per window",
+          "description": "Values for the new set, one per window: emails, logins, any line-based data",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "name": {
+          "description": "Name for a new set; give together with lines",
           "type": "string"
         }
       },
@@ -222,19 +300,25 @@
     "name": "sync_sets"
   },
   {
-    "description": "Assign one line from the set to each open window. Inserts nothing — only decides what goes where and returns it. Repeated call does not reassign already assigned values.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Pin one free line of a set to each ready window and report who got what. Types nothing; that is sync_insert. Safe to repeat: windows that already hold a line keep it, so an account is never registered with one email and confirmed with another.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profiles": {
-          "description": "Whom to distribute to; defaults to all ready",
+          "description": "Profiles whose windows get a line; defaults to every ready window",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "set": {
-          "description": "Set name",
+          "description": "Set name as sync_sets lists it",
           "type": "string"
         }
       },
@@ -246,15 +330,22 @@
     "name": "sync_spread"
   },
   {
-    "description": "Insert into each window ITS value from the set into the field where the cursor is placed in the lead window. Before calling, a human must focus the desired field.",
+    "annotations": {
+      "destructiveHint": true,
+      "idempotentHint": false,
+      "openWorldHint": true,
+      "readOnlyHint": false
+    },
+    "description": "Type each window's own pinned value into the input field that has the cursor in the leading window; the same field receives it in every window. A person must click into that field first. The text is inserted into the page as typed input and cannot be undone by the tool. Windows without a pinned line get the next free one now; call sync_spread first to review who gets what.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "leader": {
-          "description": "Lead window; defaults to the first ready",
+          "description": "Profile whose window shows where to type: the field focused there receives the values in every window; defaults to the first ready window",
           "type": "string"
         },
         "set": {
+          "description": "Set name as sync_sets lists it",
           "type": "string"
         }
       },
@@ -266,7 +357,11 @@
     "name": "sync_insert"
   },
   {
-    "description": "Scripts from manager folder: name, runner, and whether runner is available. File contents are not shown.",
+    "annotations": {
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Scripts in Morfiade's scripts folder: file name, the program that runs it, and whether that program is installed. File contents are never shown. Read-only.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {},
@@ -275,11 +370,18 @@
     "name": "list_scripts"
   },
   {
-    "description": "Move profile TO TRASH. Data is not deleted: profile is kept intact with cookies and sessions, and can be restored with restore_profile. Running profile is closed first.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Move a profile to Morfiade's recycle bin. Nothing is erased: the profile keeps its cookies and sessions and comes back with restore_profile. A running profile is closed first. Emptying the bin is not available to the agent.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         }
       },
@@ -291,7 +393,11 @@
     "name": "trash_profile"
   },
   {
-    "description": "What is in trash: name, when deleted, size.",
+    "annotations": {
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Profiles in the recycle bin: name, when it was deleted and how much disk it takes. Read-only; use the names with restore_profile.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {},
@@ -300,11 +406,18 @@
     "name": "list_trash"
   },
   {
-    "description": "Restore profile from trash. If previous name is taken, profile will be restored alongside as \"name (2)\" — nothing gets overwritten.",
+    "annotations": {
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false,
+      "readOnlyHint": false
+    },
+    "description": "Bring a profile back from the recycle bin with its cookies and sessions. If the name has been taken meanwhile, it returns as \"name (2)\" and nothing is overwritten; the answer says which name it got.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
         "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
           "type": "string"
         }
       },

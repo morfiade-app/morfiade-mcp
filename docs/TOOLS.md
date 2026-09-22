@@ -73,7 +73,7 @@ Closes the profile's window.
 | Parameter | Type | |
 |---|---|---|
 | `profile` | string | **required** |
-| `proxy` | string | **required**: `type://user:pass@host:port` or `host:port`; an empty string clears the proxy |
+| `proxy` | string | **required**: `host:port`, `host:port:user:pass`, or `scheme://user:pass@host:port` (the scheme form needs Morfiade 3.40+); an empty string clears the proxy |
 | `type` | `http` \| `socks4` \| `socks5` | optional, when the string carries no scheme |
 
 ### `check_proxy`  *(slow)*

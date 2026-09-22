@@ -136,7 +136,7 @@ Machine-readable schemas, exactly as the server answers `tools/list`: [`schemas/
 - **`create_profile`** — create a profile — optionally with proxy, note and category; permitted for the agent immediately
 - **`start_profile`** — launch a profile, optionally straight onto a URL
 - **`stop_profile`** — close the profile window
-- **`set_proxy`** — assign a proxy (`type://user:pass@host:port` or `host:port`; empty string clears it)
+- **`set_proxy`** — assign a proxy (`host:port`, `host:port:user:pass`, or `type://user:pass@host:port` from Morfiade 3.40; empty string clears it)
 - **`check_proxy`** — check one profile's proxy: alive, and where it exits
 - **`check_proxies`** — the same across several profiles, or all of them
 - **`profile_tags`** — read the tags, or replace them wholesale
