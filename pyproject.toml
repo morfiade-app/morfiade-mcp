@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "morfiade-mcp"
-version = "0.2.1"
+version = "0.2.2"
 description = "Launcher for the Morfiade MCP server — manage local Chrome profiles on Windows from an AI agent"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -33,3 +33,10 @@ morfiade-mcp = "morfiade_mcp:main"
 
 [tool.setuptools]
 py-modules = ["morfiade_mcp"]
+# The schemas stay in schemas/ in the repository (links point there) and ship
+# inside the package under a name of their own, for schema-only mode.
+packages = ["morfiade_mcp_schemas"]
+package-dir = {"morfiade_mcp_schemas" = "schemas"}
+
+[tool.setuptools.package-data]
+morfiade_mcp_schemas = ["*.json"]

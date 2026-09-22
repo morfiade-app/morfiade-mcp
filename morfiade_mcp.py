@@ -40,7 +40,7 @@ import shutil
 import subprocess
 import sys
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 EXE_NAME = "Morfiade.exe"
 
@@ -49,6 +49,7 @@ EXE_NAME = "Morfiade.exe"
 PROTOCOL_VERSION = "2025-11-25"
 SERVER_NAME = "morfiade"
 SCHEMA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schemas")
+SCHEMA_PACKAGE = "morfiade_mcp_schemas"
 
 # Off by default in the real server, each behind its own flag.
 FLAG_TOOLS = {"--mcp-allow-cdp": "browser_command",
@@ -137,15 +138,32 @@ def _run(command):
     return subprocess.call(command, close_fds=False)
 
 
+def _schema_dir():
+    """Where the schemas are: next to this file in a clone of the repository,
+    or inside the installed package (pip install morfiade-mcp)."""
+    if os.path.isdir(SCHEMA_DIR):
+        return SCHEMA_DIR
+    try:
+        import importlib.util
+        spec = importlib.util.find_spec(SCHEMA_PACKAGE)
+    except ImportError:
+        spec = None
+    for place in (spec.submodule_search_locations or []) if spec else []:
+        if os.path.isdir(place):
+            return place
+    return SCHEMA_DIR
+
+
 def _schema_tools(argv):
     """The tools the real server would list for these flags."""
-    path = os.path.join(SCHEMA_DIR, "tools-with-flags.json")
+    path = os.path.join(_schema_dir(), "tools-with-flags.json")
     try:
         with open(path, encoding="utf-8") as f:
             tools = json.load(f)
     except (OSError, ValueError) as error:
         _fail("Morfiade is a Windows program, and the tool schemas for "
-              "schema-only mode are missing (%s): run from a clone of "
+              "schema-only mode are missing (%s): reinstall with pip "
+              "install morfiade-mcp, or run from a clone of "
               "https://github.com/morfiade-app/morfiade-mcp" % error)
     hidden = {name for flag, name in FLAG_TOOLS.items() if flag not in argv}
     return [t for t in tools if t.get("name") not in hidden]
