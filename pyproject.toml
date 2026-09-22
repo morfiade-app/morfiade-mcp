@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "morfiade-mcp"
-version = "0.1.0"
+version = "0.2.0"
 description = "Launcher for the Morfiade MCP server — manage local Chrome profiles on Windows from an AI agent"
 readme = "README.md"
 requires-python = ">=3.7"

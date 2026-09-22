@@ -57,7 +57,8 @@ Example prompts that work out of the box:
 - Any MCP client with stdio support: Claude Code, Claude Desktop, Cursor,
   Gemini CLI, VS Code, your own
 
-No `pip install`, no Node, no API key to register.
+Nothing to install: no `pip install` required, no Node, no API key to register.
+The launcher below is optional.
 
 ---
 
@@ -114,6 +115,14 @@ argument.
 
 The package contains only that launcher. The server, and everything it talks
 to, is the desktop app.
+
+**Schema-only mode.** Outside Windows — say, in the Linux container where an
+MCP directory starts a server to list its tools — there is no program to run,
+so the launcher answers the handshake and `tools/list` itself, from the
+schemas in [`schemas/`](schemas/) that are dumped from the real server. Every
+tool call then returns an error saying Morfiade runs on Windows: the tools are
+described, not imitated. `MORFIADE_MCP_SCHEMA_ONLY=1` turns this mode on
+anywhere, for testing.
 
 ---
 
