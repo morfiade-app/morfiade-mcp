@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "morfiade": {
+      "command": "morfiade-mcp"
+    }
+  }
+}
