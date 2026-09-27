@@ -2,7 +2,7 @@
 
 <!-- mcp-name: io.github.morfiade-app/morfiade-mcp -->
 
-**MCP server for local Google Chrome profiles on Windows.** 18 tools that let an
+**MCP server for local Google Chrome profiles on Windows.** 19 tools that let an
 AI agent list, create, launch and organise real Chrome profiles on your own
 machine — each with its own cookies, sessions and proxy.
 
@@ -132,9 +132,10 @@ Full parameters and return shapes: [`docs/TOOLS.md`](docs/TOOLS.md).
 Machine-readable schemas, exactly as the server answers `tools/list`: [`schemas/`](schemas/).
 
 - **`status`** — version, how many profiles exist, how many the agent may use, how many are running
-- **`list_profiles`** — the permitted profiles: name, running or not, proxy, note
+- **`list_profiles`** — the permitted profiles: name, running or not, proxy and its last check, note, debug-port mode
 - **`create_profile`** — create a profile — optionally with proxy, note and category; permitted for the agent immediately
-- **`start_profile`** — launch a profile, optionally straight onto a URL
+- **`start_profile`** — launch a profile, optionally straight onto a URL; warns about a dead proxy or debug-port mode
+- **`page_info`** — what the active tab shows: title, address, whether it loaded, whether a Cloudflare check holds it
 - **`stop_profile`** — close the profile window
 - **`set_proxy`** — assign a proxy (`host:port`, `host:port:user:pass`, or `type://user:pass@host:port` from Morfiade 3.40; empty string clears it)
 - **`check_proxy`** — check one profile's proxy: alive, and where it exits

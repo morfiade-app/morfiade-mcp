@@ -1,6 +1,6 @@
 # Tool reference
 
-Verified against Morfiade 3.37. The server advertises protocol `2025-11-25`,
+Verified against Morfiade 3.42. The server advertises protocol `2025-11-25`,
 server name `morfiade`, and one capability: `tools` (`listChanged: false`).
 
 This page is for people. The machine-readable schemas — exactly what the server
@@ -29,8 +29,11 @@ exist in total, how many the agent is allowed to see, how many are running.
 ### `list_profiles`
 
 No parameters. The profiles with the "API" checkbox ticked — for each: name,
-whether it is running, its proxy and its note. Profiles without the checkbox are
-not listed and cannot be addressed by name.
+whether it is running, its proxy and its note, the result of the last proxy
+check (`proxy_check`: alive or not, and when) and `debug_port` — whether the
+profile runs in debug-port mode, with which Cloudflare checks and Google
+sign-in never pass. Profiles without the checkbox are not listed and cannot be
+addressed by name.
 
 ### `create_profile`  *(slow)*
 
@@ -56,6 +59,11 @@ still applies; it is enforced by the manager.
 If the profile is already running, the address opens in its window. Launching
 requires a valid licence.
 
+The answer carries `proxy_warning` when the last proxy check failed and
+`debug_warning` when the profile runs in debug-port mode. The launch goes ahead
+either way — they say where to look if the page does not open. Call `page_info`
+a few seconds later to see whether it did.
+
 ### `stop_profile`  *(slow)*
 
 | Parameter | Type | |
@@ -63,6 +71,18 @@ requires a valid licence.
 | `profile` | string | **required** |
 
 Closes the profile's window.
+
+### `page_info`
+
+| Parameter | Type | |
+|---|---|---|
+| `profile` | string | **required**, a running profile |
+
+What the active tab shows right now: `title`, `url`, `ready` (the document's
+loading state) and `cloudflare_check` — whether the tab is sitting on a
+Cloudflare check page. Nothing else is read from the page and nothing is
+changed. Without it, a dead proxy or a check that never passes looked like a
+successful launch.
 
 ---
 
@@ -255,7 +275,7 @@ execution on your machine.
      "instructions":"..."}}
 
 → {"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}
-← 18 tools
+← 19 tools
 
 → {"jsonrpc":"2.0","id":3,"method":"tools/call",
    "params":{"name":"start_profile","arguments":{"profile":"shop-01",

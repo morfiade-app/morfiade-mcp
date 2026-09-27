@@ -4,7 +4,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "List the browser profiles the owner has allowed for the agent (the \"API\" column in Morfiade); other profiles are invisible here. For each: name, whether it is running, proxy (password hidden), proxy type, category, antidetect on/off, note and launch count. Read-only. Call it first: every other tool takes a profile name exactly as listed here.",
+    "description": "List the browser profiles the owner has allowed for the agent (the \"API\" column in Morfiade); other profiles are invisible here. For each: name, whether it is running, proxy (password hidden), proxy type, the last proxy check (alive or not, and when), category, antidetect on/off, debug_port (debug-port mode: Cloudflare checks and Google sign-in never pass with it), note and launch count. Read-only. Call it first: every other tool takes a profile name exactly as listed here.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {},
@@ -32,7 +32,7 @@
       "openWorldHint": true,
       "readOnlyHint": false
     },
-    "description": "Launch a profile: opens its real Chrome window with its own cookies, sessions and proxy. If the profile is already running, only opens the URL in a new tab of that window. Can take up to a minute and needs a valid Morfiade licence. The agent cannot drive the page afterwards through these tools; that needs browser_command, which the owner enables separately.",
+    "description": "Launch a profile: opens its real Chrome window with its own cookies, sessions and proxy. If the profile is already running, only opens the URL in a new tab of that window. Can take up to a minute and needs a valid Morfiade licence. The answer warns when the last proxy check failed or the profile runs in debug-port mode. Call page_info afterwards to see whether the page actually opened.",
     "inputSchema": {
       "additionalProperties": false,
       "properties": {
@@ -427,6 +427,27 @@
       "type": "object"
     },
     "name": "restore_profile"
+  },
+  {
+    "annotations": {
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "What the active tab of a running profile shows right now: title, address, whether loading has finished, and whether it is a Cloudflare check page. Use it after start_profile to see whether the site actually opened. Reads nothing else from the page and changes nothing.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "description": "Profile name exactly as list_profiles returns it",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "type": "object"
+    },
+    "name": "page_info"
   },
   {
     "annotations": {

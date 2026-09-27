@@ -4,8 +4,8 @@ Exactly what the server answers to `tools/list`, as JSON.
 
 | File | Flags | Tools |
 |---|---|---|
-| `tools.json` | none | 18 |
-| `tools-with-flags.json` | `--mcp-allow-cdp` and `--mcp-allow-scripts` | 20 |
+| `tools.json` | none | 19 |
+| `tools-with-flags.json` | `--mcp-allow-cdp` and `--mcp-allow-scripts` | 21 |
 
 The two extra tools are off by default on purpose: `browser_command` gives full
 Chrome DevTools access to a running profile, and `run_script` executes code on
